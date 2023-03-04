@@ -2,7 +2,7 @@
  * \file uart.h
  * \author VasiliyMatlab
  * \brief UART Lite module
- * \version 1.0
+ * \version 1.1
  * \date 04.03.2023
  * \copyright Vasiliy (c) 2023
  */
@@ -65,7 +65,7 @@ void uart_reset(uartregs_t *uart);
  * \param[in] uart Указатель на дескриптор UART
  * \return 1, если FIFO передатчика пуста; иначе 0
  */
-_Bool uart_istxempty(uartregs_t *uart);
+__attribute__((always_inline)) inline _Bool uart_istxempty(uartregs_t *uart);
 
 /**
  * \brief Функция, проверяющая, является ли
@@ -74,7 +74,7 @@ _Bool uart_istxempty(uartregs_t *uart);
  * \param[in] uart Указатель на дескриптор UART
  * \return 1, если FIFO передатчика заполнена; иначе 0 
  */
-_Bool uart_istxfull(uartregs_t *uart);
+__attribute__((always_inline)) inline _Bool uart_istxfull(uartregs_t *uart);
 
 /**
  * \brief Функция, проверяющая, является ли
@@ -83,7 +83,7 @@ _Bool uart_istxfull(uartregs_t *uart);
  * \param[in] uart Указатель на дескриптор UART
  * \return 1, если FIFO приемника пуста; иначе 0
  */
-_Bool uart_isrxempty(uartregs_t *uart);
+__attribute__((always_inline)) inline _Bool uart_isrxempty(uartregs_t *uart);
 
 /**
  * \brief Функция, проверяющая, является ли
@@ -92,13 +92,13 @@ _Bool uart_isrxempty(uartregs_t *uart);
  * \param[in] uart Указатель на дескриптор UART
  * \return 1, если FIFO приемника заполнена; иначе 0 
  */
-_Bool uart_isrxfull(uartregs_t *uart);
+__attribute__((always_inline)) inline _Bool uart_isrxfull(uartregs_t *uart);
 
 /**
  * \brief Функция, посылающая данные
  * из буфера в UART
  * 
- * \param[in] uart Указатель на дескриптор UART
+ * \param[in,out] uart Указатель на дескриптор UART
  * \param[in] buf Указатель на буфер входных данных
  * \param[in] len Количество байт для отправки в UART
  * \return Количество байт, отправленных в UART
@@ -109,11 +109,21 @@ uint32_t uart_sendbuf(uartregs_t *uart, uint8_t *buf, uint32_t len);
  * \brief Функция, принимающая данные
  * из UART в буфер
  * 
- * \param[in] uart Указатель на дескриптор UART
+ * \param[in,out] uart Указатель на дескриптор UART
  * \param[out] buf Указатель на буфер выходных данных
  * \return Количество байт, принятых из UART
  */
 uint32_t uart_recvbuf(uartregs_t *uart, uint8_t *buf);
+
+/**
+ * \brief Обработчик прерываний UART
+ * 
+ * \param[in,out] uart Указатель на дескриптор UART
+ * \param[out] buf_in Буфер на прием
+ * \param[in] buf_out Буфер на передачу
+ * \param[in] len_out Длина буфера данных на передачу
+ */
+void uart_intrpt_handler(void *uart, uint8_t *buf_in, uint8_t *buf_out, uint8_t len_out);
 
 
 #endif /* __UART_H__ */

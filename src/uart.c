@@ -1,7 +1,7 @@
 /*
  * file:        uart.c
  * author:      VasiliyMatlab
- * version:     1.0
+ * version:     1.1
  * date:        04.03.2022
  * copyright:   Vasiliy (c) 2023
  */
@@ -27,22 +27,22 @@ void uart_reset(uartregs_t *uart) {
 }
 
 // Является ли передатчик пустым
-__attribute__((always_inline)) _Bool uart_istxempty(uartregs_t *uart) {
+__attribute__((always_inline)) inline _Bool uart_istxempty(uartregs_t *uart) {
 	return (uart->state & UART_TX_FIFO_EMPTY) ? 1 : 0;
 }
 
 // Заполнен ли передатчик
-__attribute__((always_inline)) _Bool uart_istxfull(uartregs_t *uart) {
+__attribute__((always_inline)) inline _Bool uart_istxfull(uartregs_t *uart) {
 	return (uart->state & UART_TX_FIFO_FULL) ? 1 : 0;
 }
 
 // Является ли приемник пустым
-__attribute__((always_inline)) _Bool uart_isrxempty(uartregs_t *uart) {
+__attribute__((always_inline)) inline _Bool uart_isrxempty(uartregs_t *uart) {
 	return (uart->state & UART_RX_FIFO_NOT_EMPTY) ? 0 : 1;
 }
 
 // Заполнен ли приемник
-__attribute__((always_inline)) _Bool uart_isrxfull(uartregs_t *uart) {
+__attribute__((always_inline)) inline _Bool uart_isrxfull(uartregs_t *uart) {
 	return (uart->state & UART_RX_FIFO_FULL) ? 1 : 0;
 }
 
@@ -83,4 +83,35 @@ uint32_t uart_recvbuf(uartregs_t *uart, uint8_t *buf) {
 	}
 
 	return len;
+}
+
+// Обработчик прерываний
+void uart_intrpt_handler(void *uart, uint8_t *buf_in, uint8_t *buf_out, uint8_t len_out) {
+	/*
+	 * Прерывания срабатывают при двух условиях:
+	 * 	1. Когда FIFO приемника становится не пустым
+	 * 	2. Когда FIFO передатчика становится пустым
+	 */
+
+	uartregs_t *dev = uart;
+	uint32_t status = dev->state;
+
+	// Произошло прерывание на прием
+	if (status & UART_RX_FIFO_NOT_EMPTY) {
+		uint8_t len = 0;
+		// Пока приемник не пустой, копируем данные из него в буфер
+		while (!uart_isrxempty(dev)) {
+			buf_in[len++] = dev->rx;
+		}
+	}
+
+	// Произошло прерывание на передачу
+	if (status & UART_TX_FIFO_EMPTY) {
+		uint8_t i = 0;
+		// Пока передатчик не полон и не закончились данные в буфере,
+		// берем байт из буфера и помещаем его в передатчик
+		while ((!uart_istxfull(dev)) && (i < len_out)) {
+			dev->tx = buf_out[i++];
+		}
+	}
 }
