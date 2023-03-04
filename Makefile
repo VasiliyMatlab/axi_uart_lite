@@ -2,6 +2,7 @@ CC := $(PREFIX)gcc
 AR := $(CC)-ar
 
 BUILDPATH := build
+DOCPATH   := doc
 INCPATH   := src
 LIBPATH   := lib
 SRCPATH   := src
@@ -29,6 +30,11 @@ $(BUILDPATH)/%.o:$(SRCPATH)/%.c
 	$(CC) $(CFLAGS) -c $< -I$(INCPATH) -o $@
 
 clean:
-	rm -rf $(BUILDPATH) $(LIBPATH)
+	rm -rf $(BUILDPATH) $(LIBPATH) $(DOCPATH)
+
+doc:
+	mkdir -p $(DOCPATH)
+	doxygen Doxyfile
+	$(MAKE) -C $(DOCPATH)/latex
 
 .PHONY: all start clean doc

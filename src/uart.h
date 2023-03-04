@@ -65,7 +65,7 @@ void uart_reset(uartregs_t *uart);
  * \param[in] uart Указатель на дескриптор UART
  * \return 1, если FIFO передатчика пуста; иначе 0
  */
-__attribute__((always_inline)) inline _Bool uart_istxempty(uartregs_t *uart);
+_Bool uart_istxempty(uartregs_t *uart);
 
 /**
  * \brief Функция, проверяющая, является ли
@@ -74,7 +74,7 @@ __attribute__((always_inline)) inline _Bool uart_istxempty(uartregs_t *uart);
  * \param[in] uart Указатель на дескриптор UART
  * \return 1, если FIFO передатчика заполнена; иначе 0 
  */
-__attribute__((always_inline)) inline _Bool uart_istxfull(uartregs_t *uart);
+_Bool uart_istxfull(uartregs_t *uart);
 
 /**
  * \brief Функция, проверяющая, является ли
@@ -83,7 +83,7 @@ __attribute__((always_inline)) inline _Bool uart_istxfull(uartregs_t *uart);
  * \param[in] uart Указатель на дескриптор UART
  * \return 1, если FIFO приемника пуста; иначе 0
  */
-__attribute__((always_inline)) inline _Bool uart_isrxempty(uartregs_t *uart);
+_Bool uart_isrxempty(uartregs_t *uart);
 
 /**
  * \brief Функция, проверяющая, является ли
@@ -92,7 +92,7 @@ __attribute__((always_inline)) inline _Bool uart_isrxempty(uartregs_t *uart);
  * \param[in] uart Указатель на дескриптор UART
  * \return 1, если FIFO приемника заполнена; иначе 0 
  */
-__attribute__((always_inline)) inline _Bool uart_isrxfull(uartregs_t *uart);
+_Bool uart_isrxfull(uartregs_t *uart);
 
 /**
  * \brief Функция, посылающая данные

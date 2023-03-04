@@ -6,7 +6,7 @@
  * copyright:   Vasiliy (c) 2023
  */
 
-#include "stddef.h"
+#include <stddef.h>
 
 #include "uart.h"
 
