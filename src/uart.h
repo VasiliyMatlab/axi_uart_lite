@@ -2,8 +2,8 @@
  * \file uart.h
  * \author VasiliyMatlab
  * \brief UART Lite module
- * \version 1.1
- * \date 04.03.2023
+ * \version 1.2
+ * \date 05.04.2023
  * \copyright Vasiliy (c) 2023
  */
 
@@ -120,10 +120,11 @@ uint32_t uart_recvbuf(uartregs_t *uart, uint8_t *buf);
  * 
  * \param[in,out] uart Указатель на дескриптор UART
  * \param[out] buf_in Буфер на прием
+ * \param[out] len_in Количество принятых байт
  * \param[in] buf_out Буфер на передачу
  * \param[in] len_out Длина буфера данных на передачу
  */
-void uart_intrpt_handler(void *uart, uint8_t *buf_in, uint8_t *buf_out, uint8_t len_out);
+void uart_intrpt_handler(void *uart, uint8_t *buf_in, uint8_t *len_in, uint8_t *buf_out, uint8_t len_out);
 
 
 #endif /* __UART_H__ */

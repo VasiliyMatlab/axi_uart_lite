@@ -1,8 +1,8 @@
 /*
  * file:        uart.c
  * author:      VasiliyMatlab
- * version:     1.1
- * date:        04.03.2022
+ * version:     1.2
+ * date:        05.04.2022
  * copyright:   Vasiliy (c) 2023
  */
 
@@ -86,7 +86,7 @@ uint32_t uart_recvbuf(uartregs_t *uart, uint8_t *buf) {
 }
 
 // Обработчик прерываний
-void uart_intrpt_handler(void *uart, uint8_t *buf_in, uint8_t *buf_out, uint8_t len_out) {
+void uart_intrpt_handler(void *uart, uint8_t *buf_in, uint8_t *len_in, uint8_t *buf_out, uint8_t len_out) {
 	/*
 	 * Прерывания срабатывают при двух условиях:
 	 * 	1. Когда FIFO приемника становится не пустым
@@ -98,10 +98,9 @@ void uart_intrpt_handler(void *uart, uint8_t *buf_in, uint8_t *buf_out, uint8_t 
 
 	// Произошло прерывание на прием
 	if (status & UART_RX_FIFO_NOT_EMPTY) {
-		uint8_t len = 0;
 		// Пока приемник не пустой, копируем данные из него в буфер
 		while (!uart_isrxempty(dev)) {
-			buf_in[len++] = dev->rx;
+			buf_in[(*len_in)++] = dev->rx;
 		}
 	}
 
